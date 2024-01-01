@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 from dijkstra import dijkstra
 from graph import Graph, Node, Edge
@@ -21,30 +22,62 @@ def set_edge(node_value):
     canvas.unbind("<Button-1>")
     current_node = get_node(node_value)
     for pos in node_pos_list:
-        if pos[0] == current_node: # (nodeA, (x,y))
+        if pos[0] == current_node:
             current_node_pos = pos[1]
 
-    node_to = input("Enter a node: ")
-    user_input = int(input("Enter the edge distance: "))
+    while True:
+        node_to = input("Enter a node: ")
+        if node_to.isalpha():  # Check if the input is a letter
+            node_to = node_to.upper()  # Convert to uppercase
+            node_to = get_node(node_to)
+            break
+        else:
+            print("Invalid input. Please enter a letter for the node.")
 
-    node_to = get_node(node_to)
+    while True:
+        try:
+            user_input = int(input("Enter the edge distance: "))
+            break
+        except ValueError:
+            print("Invalid input. Please enter a number for the edge distance.")
 
     for pos in node_pos_list:
         if pos[0] == node_to:
             node_to_pos = pos[1]
 
-    # nodeA: [Edge(3, nodeB)]
-    # nodeB: [Edge(3, nodeA)]
     node_objects[current_node].append(Edge(user_input, node_to))
     node_objects[node_to].append(Edge(user_input, current_node))
+
+    # Draw the line and display the distance
     canvas.create_line(current_node_pos, node_to_pos, fill="black", width=2)
+    mid_x = (current_node_pos[0] + node_to_pos[0]) / 2
+    mid_y = (current_node_pos[1] + node_to_pos[1]) / 2
+    text_y_position = mid_y - 10
+    canvas.create_text(mid_x, text_y_position, text=str(user_input), fill="black")
+
     canvas.bind("<Button-1>", on_click)
+
 
 
 
 g = Graph()
 
+def connect_all_nodes():
+    for node1 in node_objects.keys():
+        for node2 in node_objects.keys():
+            if node1 != node2 and node2 not in [edge.node for edge in node_objects[node1]]:
+                random_distance = random.randint(1, 10)
+                node_objects[node1].append(Edge(random_distance, node2))
+                node_objects[node2].append(Edge(random_distance, node1))
 
+                # Draw the line and display the distance
+                node1_pos = next(pos for n, pos in node_pos_list if n == node1)
+                node2_pos = next(pos for n, pos in node_pos_list if n == node2)
+                canvas.create_line(node1_pos, node2_pos, fill="black", width=2)
+                mid_x = (node1_pos[0] + node2_pos[0]) / 2
+                mid_y = (node1_pos[1] + node2_pos[1]) / 2
+                text_y_position = mid_y - 10
+                canvas.create_text(mid_x, text_y_position, text=str(random_distance), fill="black")
 
 def on_click(event):
     global node_count, node_names
@@ -108,6 +141,9 @@ def main():
 
     button2 = tk.Button(button_frame, text="FIND PATH", command=find_shortest_path)
     button2.pack(side=tk.LEFT, padx=5, pady=5)
+
+    connect_all_button = tk.Button(button_frame, text="CONNECT ALL", command=connect_all_nodes)
+    connect_all_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     canvas.bind("<Button-1>", on_click)
 
