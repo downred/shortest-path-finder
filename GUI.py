@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import math
 
 from dijkstra import dijkstra
 from graph import Graph, Node, Edge
@@ -16,6 +17,7 @@ node_pos_list = []
 node_pos = []
 node_objects = {}
 
+radius = 12;
 
 def set_edge(node_value):
     global current_node_pos, node_to_pos
@@ -48,8 +50,10 @@ def set_edge(node_value):
     node_objects[current_node].append(Edge(user_input, node_to))
     node_objects[node_to].append(Edge(user_input, current_node))
 
-    # Draw the line and display the distance
-    canvas.create_line(current_node_pos, node_to_pos, fill="black", width=2)
+    current_node_pos = next(pos for n, pos in node_pos_list if n == current_node)
+    node_to_pos = next(pos for n, pos in node_pos_list if n == node_to)
+    start_point, end_point = calculate_edge_points(current_node_pos, node_to_pos, radius)
+    canvas.create_line(start_point, end_point, fill="black", width=2)
     mid_x = (current_node_pos[0] + node_to_pos[0]) / 2
     mid_y = (current_node_pos[1] + node_to_pos[1]) / 2
     text_y_position = mid_y - 10
@@ -62,6 +66,22 @@ def set_edge(node_value):
 
 g = Graph()
 
+def calculate_edge_points(pos1, pos2, radius):
+    dx = pos2[0] - pos1[0]
+    dy = pos2[1] - pos1[1]
+    dist = math.sqrt(dx**2 + dy**2)
+    dx /= dist
+    dy /= dist
+
+    # Calculate edge points on the circles
+    start_x = pos1[0] + radius * dx
+    start_y = pos1[1] + radius * dy
+    end_x = pos2[0] - radius * dx
+    end_y = pos2[1] - radius * dy
+
+    return (start_x, start_y), (end_x, end_y)
+
+
 def connect_all_nodes():
     for node1 in node_objects.keys():
         for node2 in node_objects.keys():
@@ -73,7 +93,8 @@ def connect_all_nodes():
                 # Draw the line and display the distance
                 node1_pos = next(pos for n, pos in node_pos_list if n == node1)
                 node2_pos = next(pos for n, pos in node_pos_list if n == node2)
-                canvas.create_line(node1_pos, node2_pos, fill="black", width=2)
+                start_point, end_point = calculate_edge_points(node1_pos, node2_pos, radius)
+                canvas.create_line(start_point, end_point, fill="black", width=2)
                 mid_x = (node1_pos[0] + node2_pos[0]) / 2
                 mid_y = (node1_pos[1] + node2_pos[1]) / 2
                 text_y_position = mid_y - 10
