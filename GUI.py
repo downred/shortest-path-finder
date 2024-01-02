@@ -138,27 +138,38 @@ def main():
     root.title("Shto kulmet e grafit duke klikuar me maus.")
 
     window_width = 600
-    window_height = 600
+    window_height = 650  # Increase the window height to account for button space
+
+    # Set the initial geometry of the window (width x height + x_offset + y_offset)
     root.geometry(f"{window_width}x{window_height}")
 
-    # Create a frame for the canvas
-    canvas_frame = tk.Frame(root)
-    canvas_frame.pack(side=tk.TOP)
-
-    global canvas
-    canvas = tk.Canvas(canvas_frame, width=window_width, height=window_height, bg="white")
-    canvas.pack()
+    # Set the minimum size of the window to ensure that all elements are visible
+    root.minsize(window_width, window_height)
 
     # Create a frame for the buttons
     button_frame = tk.Frame(root)
-    button_frame.pack(side=tk.LEFT)
+    # Pack the button frame with some padding to ensure visibility
+    button_frame.pack(side=tk.TOP, fill=tk.X, pady=(5, 0))  # Add padding at the top
 
     button2 = tk.Button(button_frame, text="FIND PATH", command=find_shortest_path)
     button2.pack(side=tk.LEFT, padx=5, pady=5)
 
+    # Create a frame for the canvas
+    canvas_frame = tk.Frame(root)
+    # Use 'fill' and 'expand' to make sure the canvas_frame fills the available space
+    canvas_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(5, 0))  # Add padding below the button frame
+
+    global canvas
+    # Set the canvas size explicitly, accounting for the button frame height
+    canvas_height = window_height - 50  # Adjust the 50 if your button frame is larger
+    canvas = tk.Canvas(canvas_frame, width=window_width, height=canvas_height, bg="white")
+    # Use 'fill' and 'expand' to make sure the canvas fills the canvas_frame
+    canvas.pack(fill=tk.BOTH, expand=True)
+
     canvas.bind("<Button-1>", on_click)
 
     root.mainloop()
+
 
 def print_node_objects(): #this method prints the all the nodes in node_objects and the edges for each node(edges are printed under the node as (distance, node) tuples)
     for node, edges in node_objects.items():
