@@ -93,37 +93,6 @@ def calculate_edge_points(pos1, pos2, radius):
 
     return (start_x, start_y), (end_x, end_y)
 
-
-def connect_all_nodes():
-    for node1 in node_objects.keys():
-        for node2 in node_objects.keys():
-            if node1 != node2 and node2 not in [edge.node for edge in node_objects[node1]]:
-                random_distance = random.randint(1, 10)
-                node_objects[node1].append(Edge(random_distance, node2))
-                node_objects[node2].append(Edge(random_distance, node1))
-
-                # Draw the line and display the distance
-                node1_pos = next(pos for n, pos in node_pos_list if n == node1)
-                node2_pos = next(pos for n, pos in node_pos_list if n == node2)
-                start_point, end_point = calculate_edge_points(node1_pos, node2_pos, radius)
-                canvas.create_line(start_point, end_point, fill="black", width=2)
-                mid_x = (node1_pos[0] + node2_pos[0]) / 2
-                mid_y = (node1_pos[1] + node2_pos[1]) / 2
-                angle = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
-                # Offset the text up or down depending on the angle
-                offset_distance = 15  # This is the distance from the line to the text
-                text_offset_x = offset_distance * math.sin(angle)
-                text_offset_y = offset_distance * -math.cos(angle)
-
-                # If the line is mostly horizontal, adjust the text above/below the line
-                if abs(angle) < math.pi / 4 or abs(angle) > 3 * math.pi / 4:
-                    mid_y += text_offset_y  # Adjusting text position above/below the line
-                else:  # If the line is mostly vertical, adjust the text left/right
-                    mid_x += text_offset_x  # Adjusting text position left/right of the line
-
-                # Display the distance
-                canvas.create_text(mid_x, mid_y, text=str(random_distance), fill="black")
-
 def on_click(event):
     global node_count, node_names
 
@@ -186,9 +155,6 @@ def main():
 
     button2 = tk.Button(button_frame, text="FIND PATH", command=find_shortest_path)
     button2.pack(side=tk.LEFT, padx=5, pady=5)
-
-    connect_all_button = tk.Button(button_frame, text="CONNECT ALL", command=connect_all_nodes)
-    connect_all_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     canvas.bind("<Button-1>", on_click)
 
