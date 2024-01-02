@@ -56,8 +56,20 @@ def set_edge(node_value):
     canvas.create_line(start_point, end_point, fill="black", width=2)
     mid_x = (current_node_pos[0] + node_to_pos[0]) / 2
     mid_y = (current_node_pos[1] + node_to_pos[1]) / 2
-    text_y_position = mid_y - 10
-    canvas.create_text(mid_x, text_y_position, text=str(user_input), fill="black")
+    angle = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
+    # Offset the text up or down depending on the angle
+    offset_distance = 15  # This is the distance from the line to the text
+    text_offset_x = offset_distance * math.sin(angle)
+    text_offset_y = offset_distance * -math.cos(angle)
+
+    # If the line is mostly horizontal, adjust the text above/below the line
+    if abs(angle) < math.pi / 4 or abs(angle) > 3 * math.pi / 4:
+        mid_y += text_offset_y  # Adjusting text position above/below the line
+    else:  # If the line is mostly vertical, adjust the text left/right
+        mid_x += text_offset_x  # Adjusting text position left/right of the line
+
+    # Display the distance
+    canvas.create_text(mid_x, mid_y, text=str(user_input), fill="black")
 
     canvas.bind("<Button-1>", on_click)
 
@@ -97,8 +109,20 @@ def connect_all_nodes():
                 canvas.create_line(start_point, end_point, fill="black", width=2)
                 mid_x = (node1_pos[0] + node2_pos[0]) / 2
                 mid_y = (node1_pos[1] + node2_pos[1]) / 2
-                text_y_position = mid_y - 10
-                canvas.create_text(mid_x, text_y_position, text=str(random_distance), fill="black")
+                angle = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
+                # Offset the text up or down depending on the angle
+                offset_distance = 15  # This is the distance from the line to the text
+                text_offset_x = offset_distance * math.sin(angle)
+                text_offset_y = offset_distance * -math.cos(angle)
+
+                # If the line is mostly horizontal, adjust the text above/below the line
+                if abs(angle) < math.pi / 4 or abs(angle) > 3 * math.pi / 4:
+                    mid_y += text_offset_y  # Adjusting text position above/below the line
+                else:  # If the line is mostly vertical, adjust the text left/right
+                    mid_x += text_offset_x  # Adjusting text position left/right of the line
+
+                # Display the distance
+                canvas.create_text(mid_x, mid_y, text=str(random_distance), fill="black")
 
 def on_click(event):
     global node_count, node_names
