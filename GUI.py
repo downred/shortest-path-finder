@@ -1,5 +1,4 @@
 import tkinter as tk
-import random
 import math
 
 from dijkstra import dijkstra
@@ -17,7 +16,7 @@ node_pos_list = []
 node_pos = []
 node_objects = {}
 
-radius = 12;
+radius = 12
 
 def set_edge(node_value):
     global current_node_pos, node_to_pos
@@ -29,8 +28,8 @@ def set_edge(node_value):
 
     while True:
         node_to = input("Enter a node: ")
-        if node_to.isalpha():  # Check if the input is a letter
-            node_to = node_to.upper()  # Convert to uppercase
+        if node_to.isalpha():  
+            node_to = node_to.upper()  
             node_to = get_node(node_to)
             break
         else:
@@ -57,18 +56,18 @@ def set_edge(node_value):
     mid_x = (current_node_pos[0] + node_to_pos[0]) / 2
     mid_y = (current_node_pos[1] + node_to_pos[1]) / 2
     angle = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
-    # Offset the text up or down depending on the angle
-    offset_distance = 15  # This is the distance from the line to the text
+    
+    offset_distance = 15  
     text_offset_x = offset_distance * math.sin(angle)
     text_offset_y = offset_distance * -math.cos(angle)
 
-    # If the line is mostly horizontal, adjust the text above/below the line
+    
     if abs(angle) < math.pi / 4 or abs(angle) > 3 * math.pi / 4:
-        mid_y += text_offset_y  # Adjusting text position above/below the line
-    else:  # If the line is mostly vertical, adjust the text left/right
-        mid_x += text_offset_x  # Adjusting text position left/right of the line
+        mid_y += text_offset_y  
+    else:  
+        mid_x += text_offset_x  
 
-    # Display the distance
+    
     canvas.create_text(mid_x, mid_y, text=str(user_input), fill="black")
 
     canvas.bind("<Button-1>", on_click)
@@ -85,7 +84,7 @@ def calculate_edge_points(pos1, pos2, radius):
     dx /= dist
     dy /= dist
 
-    # Calculate edge points on the circles
+    
     start_x = pos1[0] + radius * dx
     start_y = pos1[1] + radius * dy
     end_x = pos2[0] - radius * dx
@@ -105,7 +104,7 @@ def on_click(event):
 
 
         node = Node(node_names[node_count])
-        node_objects[node] = []  # Initialize with an empty list of edges
+        node_objects[node] = []  
 
         x, y = event.x, event.y
         canvas.create_oval(x - 12, y - 12, x + 12, y + 12, fill="red", outline="red")
@@ -113,17 +112,17 @@ def on_click(event):
         node_count = node_count + 1
         node_pos = [event.x, event.y]
         node_pos_list.append((node, node_pos))
-        # canvas.create_line(360, 540, event.x, event.y, fill="black", width=2)
+        
     else:
         print("Node limit reached!")
-        # print(node_pos_list)
-        # print(str(node_objects[0])) 
-        # for node in node_pos_list:
-        #     for starter_pos in node_pos_list:
-        #         canvas.create_line(starter_pos, node, fill="black", width=2)
-        # get_node("A")
-        #
-        # print(node_A)
+        
+        
+        
+        
+        
+        
+        
+        
 
 
 def find_shortest_path():
@@ -138,32 +137,32 @@ def main():
     root.title("Shto kulmet e grafit duke klikuar me maus.")
 
     window_width = 600
-    window_height = 650  # Increase the window height to account for button space
+    window_height = 650  
 
-    # Set the initial geometry of the window (width x height + x_offset + y_offset)
+    
     root.geometry(f"{window_width}x{window_height}")
 
-    # Set the minimum size of the window to ensure that all elements are visible
+    
     root.minsize(window_width, window_height)
 
-    # Create a frame for the buttons
+    
     button_frame = tk.Frame(root)
-    # Pack the button frame with some padding to ensure visibility
-    button_frame.pack(side=tk.TOP, fill=tk.X, pady=(5, 0))  # Add padding at the top
+    
+    button_frame.pack(side=tk.TOP, fill=tk.X, pady=(5, 0))  
 
     button2 = tk.Button(button_frame, text="FIND PATH", command=find_shortest_path)
     button2.pack(side=tk.LEFT, padx=5, pady=5)
 
-    # Create a frame for the canvas
+    
     canvas_frame = tk.Frame(root)
-    # Use 'fill' and 'expand' to make sure the canvas_frame fills the available space
-    canvas_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(5, 0))  # Add padding below the button frame
+    
+    canvas_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=(5, 0))  
 
     global canvas
-    # Set the canvas size explicitly, accounting for the button frame height
-    canvas_height = window_height - 50  # Adjust the 50 if your button frame is larger
+    
+    canvas_height = window_height - 50  
     canvas = tk.Canvas(canvas_frame, width=window_width, height=canvas_height, bg="white")
-    # Use 'fill' and 'expand' to make sure the canvas fills the canvas_frame
+    
     canvas.pack(fill=tk.BOTH, expand=True)
 
     canvas.bind("<Button-1>", on_click)
@@ -171,7 +170,7 @@ def main():
     root.mainloop()
 
 
-def print_node_objects(): #this method prints the all the nodes in node_objects and the edges for each node(edges are printed under the node as (distance, node) tuples)
+def print_node_objects(): 
     for node, edges in node_objects.items():
         print(f"Node {node}")
         for edge in edges:

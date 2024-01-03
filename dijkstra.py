@@ -1,5 +1,5 @@
 from PriorityQueue import PriorityQueue
-from graph import Node, Graph, Edge
+
 
 
 def dijkstra(graph, start):
@@ -31,7 +31,7 @@ def dijkstra(graph, start):
     visited_str = {str(k): v for k, v in visited.items()}
     distances_str = {str(k): v for k, v in distances.items()}
 
-    # Print the dictionaries
+
     print("Previous:", previous_str)
     print("Visited:", visited_str)
     print("Distances:", distances_str)
